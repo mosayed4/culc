@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة المقدم والأقساط</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .calculator-container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 1.8rem;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-section, .result-section {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+            background-color: white;
+        }
+        
+        input:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        button {
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #3498db, #1a5f9e);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .btn-info {
+            background: linear-gradient(to right, #9b59b6, #8e44ad);
+            color: white;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result-item {
+            background: linear-gradient(to right, #eef2f7, #ffffff);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #3498db;
+            transition: transform 0.3s;
+        }
+        
+        .result-item:hover {
+            transform: translateX(-5px);
+        }
+        
+        .result-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3498db;
+            display: flex;
+            align-items: center;
+        }
+        
+        .currency {
+            font-size: 1.3rem;
+            margin-left: 8px;
+            color: #27ae60;
+        }
+        
+        .advanced-options {
+            background: linear-gradient(to right, #34495e, #2c3e50);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .footer {
+            background: linear-gradient(to right, #2c3e50, #1a2a4a);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 1rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            color: #3498db;
+        }
+        
+        .instruction {
+            background-color: #fff9e6;
+            border-left: 4px solid #f1c40f;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .instruction h3 {
+            color: #d35400;
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background-color: #e3f2fd;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="header">
+            <h1><i class="fas fa-calculator"></i> حاسبة المقدم والأقساط</h1>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="totalPrice">إجمالي سعر الوحدة (جنيه)</label>
+                    <input type="number" id="totalPrice" placeholder="أدخل السعر الإجمالي" value="250000">
+                </div>
+                
+                <div class="input-group">
+                    <label for="downPaymentPercentage">نسبة المقدم (%)</label>
+                    <input type="number" id="downPaymentPercentage" placeholder="أدخل نسبة المقدم" value="20" min="0" max="100">
+                </div>
+                
+                <div class="input-group">
+                    <label for="years">عدد سنوات التقسيط</label>
+                    <select id="years">
+                        <option value="1">1 سنة</option>
+                        <option value="2">2 سنوات</option>
+                        <option value="3">3 سنوات</option>
+                        <option value="4">4 سنوات</option>
+                        <option value="5" selected>5 سنوات</option>
+                        <option value="6">6 سنوات</option>
+                        <option value="7">7 سنوات</option>
+                        <option value="8">8 سنوات</option>
+                        <option value="9">9 سنوات</option>
+                        <option value="10">10 سنوات</option>
+                        <option value="11">11 سنوات</option>
+                        <option value="12">12 سنوات</option>
+                        <option value="13">13 سنوات</option>
+                        <option value="14">14 سنوات</option>
+                        <option value="15">15 سنوات</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="months">شهور اختياري</label>
+                    <select id="months">
+                        <option value="0">بدون شهور إضافية</option>
+                        <option value="3">3 شهور</option>
+                        <option value="6">6 شهور</option>
+                        <option value="9">9 شهور</option>
+                        <option value="12">12 شهر</option>
+                    </select>
+                </div>
+                
+                <div class="advanced-options">
+                    <span><i class="fas fa-cog"></i>اذا كانت  تحتاج الي استشاره عقاريه  مميزه  مجانيه    </span>
+                    <i class="fas fa-chevron-down"></i>
+                    
+                </div>
+                
+                <div class="instruction">
+                    <h3><i class="fas fa-info-circle"></i> تعليمات الاستخدام:</h3>
+                    <p>1. أدخل <span class="highlight">إجمالي سعر الوحدة</span> بالجنيه المصري</p>
+                    <p>2. حدد <span class="highlight">نسبة المقدم</span> المطلوبة (من 0% إلى 100%)</p>
+                    <p>3. اختر <span class="highlight">عدد سنوات التقسيط</span> من القائمة</p>
+                    <p>4. حدد <span class="highlight">فترة السماح</span> إذا لزم الأمر</p>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <div class="result-item">
+                    <div class="result-title">قيمة المقدم:</div>
+                    <div class="result-value"><span id="downPaymentValue">50,000.00</span> <span class="currency">جنيه</span></div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-title">القسط الشهري:</div>
+                    <div class="result-value"><span id="monthlyInstallment">4,166.67</span> <span class="currency">جنيه</span></div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-title">إجمالي الأقساط السنوية:</div>
+                    <div class="result-value"><span id="annualInstallments">50,000.00</span> <span class="currency">جنيه</span></div>
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn-primary" id="calculateBtn">
+                        <i class="fas fa-calculator"></i> احسب الآن
+                    </button>
+                    <button class="btn-secondary" id="resetBtn">
+                        <i class="fas fa-broom"></i> تصفير الحقول
+                    </button>
+                    <button class="btn-warning" id="undoBtn">
+                        <i class="fas fa-undo"></i> تراجع عن التصفر
+                    </button>
+                    <button class="btn-info" id="scheduleBtn">
+                        <i class="fas fa-table"></i> جدول الأقساط
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 حاسبة المقدم والأقساط المهندس محمد سيد | جميع الحقوق محفوظة</p>
+            <p> 01201888299</p>
+          
+          <a href="#" onclick="window.open('https://wa.me/+201201888299?text=' + encodeURIComponent('احتاج الي  استشاره عقاريه مميزه '))">
+            
+             التواصل واتس اب  مع استشاري عقاري 
+            <div class="logo">
+                <i class="fas fa-lock"></i>
+                <i class="fas fa-shield-alt"></i>
+                <i class="fas fa-user-check"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // عناصر DOM
+        const totalPriceInput = document.getElementById('totalPrice');
+        const downPaymentPercentageInput = document.getElementById('downPaymentPercentage');
+        const yearsSelect = document.getElementById('years');
+        const monthsSelect = document.getElementById('months');
+        const downPaymentValue = document.getElementById('downPaymentValue');
+        const monthlyInstallment = document.getElementById('monthlyInstallment');
+        const annualInstallments = document.getElementById('annualInstallments');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const undoBtn = document.getElementById('undoBtn');
+        const scheduleBtn = document.getElementById('scheduleBtn');
+        
+        // حفظ الحالة قبل التصغير
+        let previousState = {
+            totalPrice: totalPriceInput.value,
+            downPaymentPercentage: downPaymentPercentageInput.value,
+            years: yearsSelect.value,
+            months: monthsSelect.value
+        };
+        
+        // تنسيق الأرقام
+        function formatNumber(num) {
+            return new Intl.NumberFormat('ar-EG', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(num);
+        }
+        
+        // حساب القيم
+        function calculateValues() {
+            const totalPrice = parseFloat(totalPriceInput.value) || 0;
+            const downPaymentPercentage = parseFloat(downPaymentPercentageInput.value) || 0;
+            const years = parseInt(yearsSelect.value) || 1;
+            const months = parseInt(monthsSelect.value) || 0;
+            
+            // حساب المقدم
+            const downPayment = totalPrice * (downPaymentPercentage / 100);
+            
+            // المتبقي بعد المقدم
+            const remainingAmount = totalPrice - downPayment;
+            
+            // إجمالي الأقساط السنوية
+            const annualPayment = remainingAmount / years;
+            
+            // القسط الشهري
+            const monthlyPayment = annualPayment / 12;
+            
+            // تحديث النتائج
+            downPaymentValue.textContent = formatNumber(downPayment);
+            annualInstallments.textContent = formatNumber(annualPayment);
+            monthlyInstallment.textContent = formatNumber(monthlyPayment);
+        }
+        
+        // تصفير الحقول
+        function resetFields() {
+            // حفظ الحالة الحالية قبل التصغير
+            previousState = {
+                totalPrice: totalPriceInput.value,
+                downPaymentPercentage: downPaymentPercentageInput.value,
+                years: yearsSelect.value,
+                months: monthsSelect.value
+            };
+            
+            // تصفير الحقول
+            totalPriceInput.value = '';
+            downPaymentPercentageInput.value = '';
+            yearsSelect.value = '5';
+            monthsSelect.value = '0';
+            
+            // تصفير النتائج
+            downPaymentValue.textContent = '0.00';
+            monthlyInstallment.textContent = '0.00';
+            annualInstallments.textContent = '0.00';
+        }
+        
+        // تراجع عن التصغير
+        function undoReset() {
+            totalPriceInput.value = previousState.totalPrice;
+            downPaymentPercentageInput.value = previousState.downPaymentPercentage;
+            yearsSelect.value = previousState.years;
+            monthsSelect.value = previousState.months;
+            
+            // إعادة الحساب
+            calculateValues();
+        }
+        
+        // عرض جدول الأقساط
+        function showPaymentSchedule() {
+            alert('سيتم عرض جدول الأقساط في نافذة منبثقة أو صفحة جديدة. هذه الوظيفة تتطلب تطويرًا إضافيًا.');
+        }
+        
+        // أحداث المستخدم
+        calculateBtn.addEventListener('click', calculateValues);
+        resetBtn.addEventListener('click', resetFields);
+        undoBtn.addEventListener('click', undoReset);
+        scheduleBtn.addEventListener('click', showPaymentSchedule);
+        
+        // حساب القيم عند التحميل
+        window.addEventListener('load', calculateValues);
+        
+        // حساب القيم عند تغيير المدخلات
+        totalPriceInput.addEventListener('input', calculateValues);
+        downPaymentPercentageInput.addEventListener('input', calculateValues);
+        yearsSelect.addEventListener('change', calculateValues);
+        monthsSelect.addEventListener('change', calculateValues);
+    </script>
+</body>
+</html>
